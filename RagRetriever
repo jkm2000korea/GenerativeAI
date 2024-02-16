@@ -1,0 +1,38 @@
+from transformers import RagTokenizer, RagRetriever, RagSequenceForGeneration
+from transformers import pipeline
+
+# RAG tokenizer를 불러옵니다.
+tokenizer = RagTokenizer.from_pretrained("facebook/rag-token-base")
+
+# RAG retriever를 불러옵니다.
+retriever = RagRetriever.from_pretrained("facebook/rag-token-base")
+
+# RAG generator를 불러옵니다.
+generator = RagSequenceForGeneration.from_pretrained("facebook/rag-token-base")
+
+# 텍스트 생성을 위한 함수를 정의합니다.
+def generate_text(query):
+    # 쿼리를 입력으로 받아 tokenizer로 전처리합니다.
+    input_dict = tokenizer.prepare_query_input(query, return_tensors="pt")
+
+    # retriever를 사용하여 검색된 정보를 가져옵니다.
+    retriever_output = retriever(input_dict["input_ids"], return_tensors="pt")
+
+    # generator를 사용하여 텍스트를 생성합니다.
+    generator_output = generator.generate(
+        input_ids=retriever_output["retrieved_input_ids"],
+        attention_mask=retriever_output["retrieved_attention_mask"],
+    )
+
+    # 생성된 텍스트를 디코딩하여 반환합니다.
+    generated_text = tokenizer.batch_decode(generator_output, skip_special_tokens=True)
+    return generated_text
+
+# 예시 사용법
+query = "Albert Einstein"
+
+# 함수를 사용하여 텍스트를 생성합니다.
+generated_text = generate_text(query)
+
+# 생성된 텍스트를 출력합니다.
+print(generated_text)
