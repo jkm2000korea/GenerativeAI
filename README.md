@@ -1,3 +1,6 @@
+![image](https://github.com/jkm2000korea/GenerativeAI/assets/77305773/ea283a73-72cf-43a2-bbb0-5697a951f53f)
+
+
 Hugging Face의 Transformers 라이브러리를 사용하여 RAG(Retrieval-Augmented Generation) 모델을 활용하여 텍스트를 생성하는 예시
 
 * RagTokenizer: RAG 모델에 사용되는 토크나이저
